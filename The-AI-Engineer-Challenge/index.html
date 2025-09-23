@@ -77,6 +77,17 @@
             border-radius: 10px;
             margin: 20px 0;
         }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +96,28 @@
         
         <div class="status">
             ✅ Live Demo Ready! This demonstrates the RAG functionality for your assignments.
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🎯 Session 03: End-to-End RAG</h3>
+                <ul>
+                    <li>PDF upload and processing</li>
+                    <li>Dream Research Mode</li>
+                    <li>Full-stack implementation</li>
+                    <li>Vercel deployment</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🎯 Session 04: Production RAG</h3>
+                <ul>
+                    <li>LangChain implementation</li>
+                    <li>LangGraph workflows</li>
+                    <li>Production-ready features</li>
+                    <li>Advanced deployment</li>
+                </ul>
+            </div>
         </div>
 
         <div class="api-key-input">
