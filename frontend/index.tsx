@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import Head from 'next/head';
 import { Send, Bot, User, Settings, Loader2, Upload, FileText, X } from 'lucide-react';
 
+// Force deployment - fix API key message (v4)
+
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -25,7 +27,7 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sendMessage = async () => {
-    if (!input.trim() || !apiKey.trim()) return;
+    if (!input.trim()) return;
 
     const userMessage: Message = {
       role: 'user',
@@ -47,7 +49,7 @@ export default function Home() {
           developer_message: developerMessage,
           user_message: input,
           model: model,
-          api_key: apiKey
+          api_key: apiKey || "" // Send empty string if no API key provided
         }),
       });
 
@@ -111,10 +113,7 @@ export default function Home() {
 
   // PDF upload function
   const handleFileUpload = async (file: File) => {
-    if (!apiKey.trim()) {
-      alert('Please enter your API key first');
-      return;
-    }
+    // API key is now optional - backend will use environment variable
 
     setIsUploading(true);
     try {
@@ -143,7 +142,7 @@ export default function Home() {
       console.log('API Key length:', apiKey.length);
       console.log('API Key starts with:', apiKey.substring(0, 10) + '...');
       
-      const response = await fetch(`/api/upload-pdf?api_key=${encodeURIComponent(apiKey)}`, {
+      const response = await fetch(`/api/upload-pdf?api_key=${encodeURIComponent(apiKey || "")}`, {
         method: 'POST',
         body: ragFormData,
       });
@@ -168,7 +167,7 @@ export default function Home() {
 
   // RAG chat function
   const sendRAGMessage = async () => {
-    if (!input.trim() || !apiKey.trim()) return;
+    if (!input.trim()) return;
 
     const userMessage: Message = {
       role: 'user',
@@ -189,7 +188,7 @@ export default function Home() {
         body: JSON.stringify({
           user_message: input,
           model: model,
-          api_key: apiKey
+          api_key: apiKey || "" // Send empty string if no API key provided
         }),
       });
 
@@ -496,12 +495,12 @@ export default function Home() {
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
                   rows={3}
-                  disabled={isLoading || !apiKey.trim() || (isRAGMode && !ragStatus.pdf_uploaded)}
+                  disabled={isLoading || (isRAGMode && !ragStatus.pdf_uploaded)}
                 />
               </div>
               <button
                 onClick={isRAGMode ? sendRAGMessage : sendMessage}
-                disabled={isLoading || !input.trim() || !apiKey.trim() || (isRAGMode && !ragStatus.pdf_uploaded)}
+                disabled={isLoading || !input.trim() || (isRAGMode && !ragStatus.pdf_uploaded)}
                 className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
               >
                 {isLoading ? (
@@ -513,8 +512,8 @@ export default function Home() {
               </button>
             </div>
             {!apiKey.trim() && (
-              <p className="text-sm text-red-500 mt-2">
-                Please enter your OpenAI API key in the settings to start chatting.
+              <p className="text-sm text-green-500 mt-2">
+                ✅ Using server-configured API key. Ready to chat! (v2)
               </p>
             )}
             {isRAGMode && !ragStatus.pdf_uploaded && apiKey.trim() && (
