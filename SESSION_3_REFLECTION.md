@@ -1,6 +1,6 @@
-﻿# Session 3: End-to-End RAG - Learning Reflection
+# Session 3: End-to-End RAG - Learning Reflection
 
-##  **Three Things I Learned**
+## 🎯 **Three Things I Learned**
 
 ### 1. **Domain-Specific RAG Customization**
 I learned how to take a generic RAG system and customize it for a specific domain (dream interpretation). This involved:
@@ -19,7 +19,7 @@ I gained hands-on experience building a complete RAG application from frontend t
 
 ### 3. **Production-Ready Code Practices**
 I learned the importance of writing production-ready code with proper documentation:
-- **Educational Code**: Creating pp_educational.py with extensive comments for learning purposes
+- **Educational Code**: Creating `app_educational.py` with extensive comments for learning purposes
 - **Error Handling**: Implementing proper error handling for PDF uploads, API failures, and edge cases
 - **User Experience**: Adding loading states, success/error messages, and intuitive UI feedback
 - **Code Organization**: Proper file structure, separation of concerns, and maintainable code
@@ -27,7 +27,7 @@ I learned the importance of writing production-ready code with proper documentat
 
 ---
 
-##  **Three Things I Haven't Learned Yet (Questions I Have)**
+## 🤔 **Three Things I Haven't Learned Yet (Questions I Have)**
 
 ### 1. **Advanced RAG Optimization Techniques**
 I still have questions about:
@@ -55,7 +55,7 @@ I want to understand:
 
 ---
 
-##  **Next Steps for Learning**
+## 🚀 **Next Steps for Learning**
 
 1. **Deep Dive into Vector Databases**: Explore QDrant, Pinecone, and other vector database solutions
 2. **Advanced Prompt Engineering**: Learn more sophisticated prompt engineering techniques
@@ -65,7 +65,7 @@ I want to understand:
 
 ---
 
-##  **Key Insights**
+## 💡 **Key Insights**
 
 The most valuable insight from Session 3 was realizing that **RAG is not just a technical implementation** - it's about **creating value for specific users**. The dream interpretation theme helped me understand that successful RAG applications require:
 

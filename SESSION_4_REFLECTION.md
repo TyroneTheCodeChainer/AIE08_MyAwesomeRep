@@ -1,6 +1,6 @@
-﻿# Session 4: Production RAG with LCEL & LangGraph - Learning Reflection
+# Session 4: Production RAG with LCEL & LangGraph - Learning Reflection
 
-##  **Three Things I Learned**
+## 🎯 **Three Things I Learned**
 
 ### 1. **LangChain Expression Language (LCEL) for RAG Pipelines**
 I learned how to build sophisticated RAG pipelines using LCEL:
@@ -28,7 +28,7 @@ I learned critical aspects of building production-ready RAG systems:
 
 ---
 
-##  **Three Things I Haven't Learned Yet (Questions I Have)**
+## 🤔 **Three Things I Haven't Learned Yet (Questions I Have)**
 
 ### 1. **Advanced RAG Evaluation and Quality Assurance**
 I still have questions about:
@@ -56,7 +56,7 @@ I want to understand:
 
 ---
 
-##  **Next Steps for Learning**
+## 🚀 **Next Steps for Learning**
 
 1. **Advanced LangChain Features**: Explore more sophisticated LangChain components and patterns
 2. **RAG Evaluation Frameworks**: Study systematic evaluation methods for RAG systems
@@ -66,7 +66,7 @@ I want to understand:
 
 ---
 
-##  **Key Insights**
+## 💡 **Key Insights**
 
 The most valuable insight from Session 4 was understanding that **production RAG systems require sophisticated orchestration**. While basic RAG is straightforward, production systems need:
 
@@ -80,7 +80,7 @@ This session taught me that **building RAG systems is just the beginning** - the
 
 ---
 
-##  **Technical Skills Gained**
+## 🔧 **Technical Skills Gained**
 
 - **LCEL Pipeline Development**: Building complex RAG pipelines with proper error handling
 - **LangGraph Workflow Design**: Creating stateful RAG workflows with conditional logic
@@ -90,12 +90,12 @@ This session taught me that **building RAG systems is just the beginning** - the
 
 ---
 
-##  **Assignment Completion Status**
+## 📊 **Assignment Completion Status**
 
- **Question #1**: Answered embedding dimension (768 for embeddinggemma model)  
- **Activity #1**: Implemented advanced chunking strategies  
- **Question #2**: Provided solutions for handling no relevant context and fact-checking  
- **LCEL Implementation**: Complete pipeline with proper error handling  
- **LangGraph Implementation**: State management and conditional workflows  
- **QDrant Integration**: Vector database setup and operations  
- **Learning Reflection**: Three things learned and three things not learned
+✅ **Question #1**: Answered embedding dimension (768 for embeddinggemma model)  
+✅ **Activity #1**: Implemented advanced chunking strategies  
+✅ **Question #2**: Provided solutions for handling no relevant context and fact-checking  
+✅ **LCEL Implementation**: Complete pipeline with proper error handling  
+✅ **LangGraph Implementation**: State management and conditional workflows  
+✅ **QDrant Integration**: Vector database setup and operations  
+✅ **Learning Reflection**: Three things learned and three things not learned
