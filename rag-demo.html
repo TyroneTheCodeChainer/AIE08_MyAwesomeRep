@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Application - Session 03 & 04 Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .chat-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 400px;
+        }
+        .message {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        input, textarea, button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input, textarea {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .upload-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .status {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .api-key-input {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 RAG Application - Session 03 & 04 Demo</h1>
+        
+        <div class="status">
+            ✅ Live Demo Ready! This demonstrates the RAG functionality for your assignments.
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🎯 Session 03: End-to-End RAG</h3>
+                <ul>
+                    <li>PDF upload and processing</li>
+                    <li>Dream Research Mode</li>
+                    <li>Full-stack implementation</li>
+                    <li>Vercel deployment</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🎯 Session 04: Production RAG</h3>
+                <ul>
+                    <li>LangChain implementation</li>
+                    <li>LangGraph workflows</li>
+                    <li>Production-ready features</li>
+                    <li>Advanced deployment</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="api-key-input">
+            <h3>🔑 API Configuration</h3>
+            <input type="password" id="apiKey" placeholder="Enter your OpenAI API Key (optional - backend has fallback)" style="width: 100%; margin-bottom: 10px;">
+            <button onclick="testConnection()">Test Backend Connection</button>
+            <div id="connectionStatus"></div>
+        </div>
+
+        <div class="upload-container">
+            <h3>📄 Session 03: PDF Upload & RAG Processing</h3>
+            <input type="file" id="pdfUpload" accept=".pdf" style="margin-bottom: 10px;">
+            <button onclick="uploadPDF()">Upload PDF for RAG Processing</button>
+            <div id="uploadStatus"></div>
+        </div>
+
+        <div class="chat-container">
+            <h3>💬 Session 04: RAG Chat Interface</h3>
+            <div id="chatMessages"></div>
+            <div class="input-container">
+                <textarea id="messageInput" placeholder="Ask questions about your uploaded PDF..." rows="3"></textarea>
+                <button onclick="sendMessage()">Send Message</button>
+            </div>
+            <div class="input-container">
+                <button onclick="toggleRAGMode()">Toggle Dream Research Mode</button>
+                <button onclick="clearChat()">Clear Chat</button>
+            </div>
+        </div>
+
+        <div class="status">
+            <h3>🎯 Assignment Features Demonstrated:</h3>
+            <ul>
+                <li><strong>Session 03:</strong> PDF upload, text processing, RAG implementation</li>
+                <li><strong>Session 04:</strong> Production deployment, API integration, error handling</li>
+                <li><strong>Backend API:</strong> <a href="https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/health" style="color: white;">https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/health</a></li>
+                <li><strong>Repository:</strong> <a href="https://github.com/TyroneTheCodeChainer/AIE08_MyAwesomeRep" style="color: white;">https://github.com/TyroneTheCodeChainer/AIE08_MyAwesomeRep</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let isRAGMode = false;
+        let uploadedFile = null;
+
+        async function testConnection() {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.innerHTML = 'Testing connection...';
+            
+            try {
+                const response = await fetch('https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/health');
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    statusDiv.innerHTML = '✅ Backend connection successful!';
+                    statusDiv.style.color = '#4CAF50';
+                } else {
+                    statusDiv.innerHTML = '❌ Backend connection failed';
+                    statusDiv.style.color = '#f44336';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Backend connection failed: ' + error.message;
+                statusDiv.style.color = '#f44336';
+            }
+        }
+
+        async function uploadPDF() {
+            const fileInput = document.getElementById('pdfUpload');
+            const statusDiv = document.getElementById('uploadStatus');
+            
+            if (!fileInput.files[0]) {
+                statusDiv.innerHTML = 'Please select a PDF file first.';
+                statusDiv.style.color = '#f44336';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            statusDiv.innerHTML = 'Uploading PDF...';
+            statusDiv.style.color = '#2196F3';
+
+            try {
+                const response = await fetch('https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/upload-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    uploadedFile = fileInput.files[0].name;
+                    statusDiv.innerHTML = `✅ PDF uploaded successfully: ${uploadedFile}`;
+                    statusDiv.style.color = '#4CAF50';
+                    addMessage('system', `PDF "${uploadedFile}" uploaded and processed for RAG. You can now ask questions about it!`);
+                } else {
+                    statusDiv.innerHTML = '❌ PDF upload failed';
+                    statusDiv.style.color = '#f44336';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Upload error: ' + error.message;
+                statusDiv.style.color = '#f44336';
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+
+            addMessage('user', message);
+            messageInput.value = '';
+
+            const apiKey = document.getElementById('apiKey').value;
+            const endpoint = isRAGMode ? '/api/rag-chat' : '/api/chat';
+            
+            try {
+                const response = await fetch(`https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_message: message,
+                        api_key: apiKey || '',
+                        model: 'gpt-3.5-turbo',
+                        developer_message: isRAGMode ? 'You are a helpful research assistant. Answer questions based on the uploaded document context.' : 'You are a helpful AI assistant.'
+                    })
+                });
+
+                if (response.ok) {
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let assistantMessage = '';
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        const chunk = decoder.decode(value);
+                        const lines = chunk.split('\n');
+                        
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const data = line.slice(6);
+                                if (data === '[DONE]') break;
+                                
+                                try {
+                                    const parsed = JSON.parse(data);
+                                    if (parsed.content) {
+                                        assistantMessage += parsed.content;
+                                        updateLastMessage('assistant', assistantMessage);
+                                    }
+                                } catch (e) {
+                                    // Ignore parsing errors
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    addMessage('assistant', '❌ Error: Failed to get response from AI');
+                }
+            } catch (error) {
+                addMessage('assistant', '❌ Error: ' + error.message);
+            }
+        }
+
+        function addMessage(role, content) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `<strong>${role === 'user' ? 'You' : role === 'assistant' ? 'AI' : 'System'}:</strong> ${content}`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function updateLastMessage(role, content) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messages = chatMessages.getElementsByClassName('message');
+            if (messages.length > 0) {
+                const lastMessage = messages[messages.length - 1];
+                if (lastMessage.innerHTML.includes('AI:')) {
+                    lastMessage.innerHTML = `<strong>AI:</strong> ${content}`;
+                } else {
+                    addMessage(role, content);
+                }
+            }
+        }
+
+        function toggleRAGMode() {
+            isRAGMode = !isRAGMode;
+            const button = event.target;
+            button.textContent = isRAGMode ? 'Exit Dream Research Mode' : 'Enter Dream Research Mode';
+            button.style.background = isRAGMode ? '#f44336' : '#4CAF50';
+            
+            addMessage('system', isRAGMode ? 
+                '🔬 Dream Research Mode activated! Upload a PDF to ask questions about it.' : 
+                '💬 Regular chat mode activated.');
+        }
+
+        function clearChat() {
+            document.getElementById('chatMessages').innerHTML = '';
+        }
+
+        // Initialize
+        addMessage('system', 'Welcome to the RAG Application Demo! Upload a PDF and start asking questions.');
+    </script>
+</body>
+</html>
