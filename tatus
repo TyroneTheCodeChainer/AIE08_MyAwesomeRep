@@ -1,0 +1,5 @@
+[33m06f0f42[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32ms03-assignment-clean[m[33m)[m Update frontend to show server API key status and fix Loom video URL
+[33m1996eb8[m Fix RAG functionality and API key configuration
+[33m544fbbc[m[33m ([m[1;32ms03-assignment[m[33m)[m Complete Session 3 homework: Dream Interpretation RAG Assistant with PDF upload and chat functionality
+[33m55aca56[m Complete Session 4 assignment with all required answers and activities
+[33m36623c6[m Fix: Remove node_modules from git tracking and update .gitignore
