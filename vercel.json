@@ -1,4 +1,4 @@
-{
+﻿{
   "version": 2,
   "builds": [
     {
@@ -7,10 +7,7 @@
     },
     {
       "src": "frontend/package.json",
-      "use": "@vercel/next",
-      "config": {
-        "distDir": "frontend/.next"
-      }
+      "use": "@vercel/next"
     }
   ],
   "routes": [
@@ -20,15 +17,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "dest": "/frontend/"
     }
   ],
   "env": {
     "OPENAI_API_KEY": "@openai_api_key"
-  },
-  "functions": {
-    "api/app.py": {
-      "maxDuration": 30
-    }
   }
 }
