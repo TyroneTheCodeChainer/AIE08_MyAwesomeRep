@@ -41,7 +41,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('/api/upload-pdf', {
+      const response = await fetch('https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/upload-pdf', {
         method: 'POST',
         body: formData,
       });
@@ -160,7 +160,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/rag-chat', {
+      const response = await fetch('https://ai-vibe-backend-qj2uw5sn0-tyroneinozs-projects.vercel.app/api/rag-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
