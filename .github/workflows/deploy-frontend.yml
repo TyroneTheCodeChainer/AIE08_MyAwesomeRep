@@ -3,7 +3,7 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths: [ 'frontend/**' ]
+    paths: [ 'The-AI-Engineer-Challenge/frontend/**' ]
   workflow_dispatch:
 
 permissions:
@@ -27,16 +27,16 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
+          cache-dependency-path: 'The-AI-Engineer-Challenge/frontend/package-lock.json'
           
       - name: Install dependencies
         run: |
-          cd frontend
+          cd The-AI-Engineer-Challenge/frontend
           npm ci
           
       - name: Build
         run: |
-          cd frontend
+          cd The-AI-Engineer-Challenge/frontend
           npm run build
           
       - name: Setup Pages
@@ -45,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: frontend/out
+          path: The-AI-Engineer-Challenge/frontend/out
 
   deploy:
     environment:
