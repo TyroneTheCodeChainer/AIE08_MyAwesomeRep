@@ -27,20 +27,12 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: frontend/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Install dependencies
         run: |
           cd frontend
           npm ci
 
-      - name: Build
+      - name: Build Next.js app
         run: |
           cd frontend
           npm run build
