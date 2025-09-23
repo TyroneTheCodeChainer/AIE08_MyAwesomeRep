@@ -20,6 +20,7 @@
       "dest": "/$1"
     }
   ],
+  "outputDirectory": ".next",
   "env": {
     "OPENAI_API_KEY": "@openai_api_key"
   }
