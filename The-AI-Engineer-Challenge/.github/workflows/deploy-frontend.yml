@@ -21,33 +21,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: Setup Node.js           
-        uses: actions/setup-node@v4   
-        with:      
-          node-version: '18'          
 
-      - name: Cache Node.js modules  
-        uses: actions/cache@v3        
-        with:      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
           path: frontend/node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |             
-            ${{ runner.os }}-node-    
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install dependencies    
-        run: |     
-          cd frontend                 
+      - name: Install dependencies
+        run: |
+          cd frontend
           npm ci
-          
+
       - name: Build
         run: |
           cd frontend
           npm run build
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
