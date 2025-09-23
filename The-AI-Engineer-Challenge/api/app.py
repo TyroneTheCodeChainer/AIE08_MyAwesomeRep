@@ -24,13 +24,14 @@ This file contains all the server code that makes this magic happen!
 # =============================================================================
 # These are like toolboxes that give us special abilities:
 
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 # FastAPI: A modern web framework that makes it easy to create APIs
 # Think of it as the foundation that lets our server talk to the internet
 
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 # StreamingResponse: Allows us to send data in real-time (like a live stream)
 # This makes the chat feel instant and responsive
+# Response: Base class for all responses
 
 from fastapi.middleware.cors import CORSMiddleware
 # CORS: Allows our frontend (the website) to talk to our backend (this server)
@@ -71,7 +72,25 @@ import json
 # Create our main application - this is like starting up our server
 app = FastAPI(title="AI-Powered RAG Chat System")
 
-# Configure CORS (Cross-Origin Resource Sharing)
+# Custom middleware to add CORS headers to ALL responses
+@app.middleware("http")
+async def add_cors_headers(request: Request, call_next):
+    """
+    Add CORS headers to every response.
+    This ensures that all responses include the necessary CORS headers
+    to allow cross-origin requests from any domain.
+    """
+    response = await call_next(request)
+    
+    # Add CORS headers to the response
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    
+    return response
+
+# Configure CORS (Cross-Origin Resource Sharing) as backup
 # This is like setting up security rules that allow our website to talk to this server
 app.add_middleware(
     CORSMiddleware,
@@ -358,15 +377,27 @@ async def upload_pdf(file: UploadFile = File(...)):
         rag_system.add_document(file.filename, text)
         uploaded_documents[file.filename] = text
         
-        # Return success message
-        return {
+        # Return success message with CORS headers
+        from fastapi.responses import JSONResponse
+        response = JSONResponse({
             "message": f"PDF '{file.filename}' uploaded and processed successfully", 
             "filename": file.filename
-        }
+        })
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
     
     except Exception as e:
-        # If something goes wrong, return an error message
-        raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
+        # If something goes wrong, return an error message with CORS headers
+        from fastapi.responses import JSONResponse
+        response = JSONResponse({"error": f"Error processing PDF: {str(e)}"}, status_code=500)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
 
 @app.post("/api/rag-chat")
 async def rag_chat(request: RAGChatRequest):
@@ -438,12 +469,37 @@ async def rag_chat(request: RAGChatRequest):
             # Signal completion
             yield "data: [DONE]\n\n"
 
-        # Return the streaming response
-        return StreamingResponse(generate(), media_type="text/plain")
+        # Return the streaming response with CORS headers
+        response = StreamingResponse(generate(), media_type="text/plain")
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
     
     except Exception as e:
-        # Return error if something goes wrong
-        raise HTTPException(status_code=500, detail=str(e))
+        # Return error if something goes wrong with CORS headers
+        from fastapi.responses import JSONResponse
+        response = JSONResponse({"error": f"Error during RAG chat: {str(e)}"}, status_code=500)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
+
+@app.options("/api/{path:path}")
+async def options_handler(path: str):
+    """
+    Handle CORS preflight requests.
+    Browsers send OPTIONS requests before making actual requests to check CORS.
+    """
+    from fastapi.responses import Response
+    response = Response()
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 @app.get("/api/health")
 async def health_check():
@@ -456,4 +512,10 @@ async def health_check():
     Returns:
     - Simple status message confirming the server is working
     """
-    return {"status": "ok"}
+    from fastapi.responses import JSONResponse
+    response = JSONResponse({"status": "ok"})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
