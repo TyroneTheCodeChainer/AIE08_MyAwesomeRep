@@ -21,6 +21,7 @@
   - FastAPI production backend
   - Multi-agent research system
   - LangSmith evaluation framework
+  
   - Complete Docker orchestration
 
 ## 🏆 **CURRICULUM ALIGNMENT ACHIEVEMENTS**

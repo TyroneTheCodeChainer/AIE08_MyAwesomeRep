@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Session 03: End-to-End RAG System
+  session03-rag:
+    build:
+      context: ./03_End-to-End_RAG
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Session 04: Production RAG System
+  session04-rag:
+    build:
+      context: ./04_Production_RAG
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+      - chromadb
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama for local models
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  # ChromaDB for vector storage
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  chroma_data:
+
+

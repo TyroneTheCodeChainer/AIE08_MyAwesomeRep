@@ -1,6 +1,6 @@
 # Import required FastAPI components for building the API
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 # Import Pydantic for data validation and settings management
 from pydantic import BaseModel
@@ -10,7 +10,11 @@ import os
 from typing import Optional
 
 # Initialize FastAPI application with a title
-app = FastAPI(title="OpenAI Chat API")
+app = FastAPI(
+    title="AI Engineer Challenge - RAG System API",
+    description="Production-ready RAG system with FastAPI and OpenAI integration",
+    version="1.0.0"
+)
 
 # Configure CORS (Cross-Origin Resource Sharing) middleware
 # This allows the API to be accessed from different domains/origins
@@ -61,10 +65,54 @@ async def chat(request: ChatRequest):
         # Handle any errors that occur during processing
         raise HTTPException(status_code=500, detail=str(e))
 
+# Define a root endpoint
+@app.get("/")
+async def root():
+    return {
+        "message": "AI Engineer Challenge RAG System API",
+        "status": "online",
+        "version": "1.0.0",
+        "endpoints": {
+            "health": "/api/health",
+            "chat": "/api/chat",
+            "sessions": "/api/sessions"
+        }
+    }
+
 # Define a health check endpoint to verify API status
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "healthy",
+        "message": "RAG API is running",
+        "service": "FastAPI RAG System"
+    }
+
+# Session-specific status endpoint
+@app.get("/api/sessions")
+async def sessions():
+    return {
+        "message": "Available RAG implementations",
+        "sessions": {
+            "session_03": {
+                "framework": "Flask",
+                "features": ["PDF processing", "Vector search", "OpenAI integration"],
+                "status": "available",
+                "location": "/03_End-to-End_RAG/"
+            },
+            "session_04": {
+                "framework": "FastAPI + LangChain",
+                "features": ["ChromaDB", "LangGraph", "LangSmith", "Multi-agent"],
+                "status": "available",
+                "location": "/04_Production_RAG/"
+            }
+        },
+        "current_api": {
+            "framework": "FastAPI",
+            "features": ["OpenAI Chat", "Streaming responses", "CORS enabled"],
+            "status": "active"
+        }
+    }
 
 # Entry point for running the application directly
 if __name__ == "__main__":
