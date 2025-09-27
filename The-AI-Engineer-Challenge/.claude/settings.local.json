@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/tfel4/OneDrive/Documents/2025/AI_BootCamp/AIM_CodeRep/code/AIE08_MyAwesomeRep/**)",
+      "Bash(python test:*)",
+      "Read(//c/Users/tfel4/OneDrive/Documents/2025/AI_BootCamp/Week 2/Snips/**)",
+      "Read(//c/Users/tfel4/OneDrive/Documents/2025/AI_BootCamp/AIM_CodeRep/code/AIE8/**)",
+      "WebFetch(domain:github.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

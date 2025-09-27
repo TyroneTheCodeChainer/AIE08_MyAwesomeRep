@@ -21,40 +21,40 @@ def test_imports():
         import logging
         from datetime import datetime
         from typing import List, Dict, Any
-        print("[SUCCESS] Basic Python imports successful")
+        print("✅ Basic Python imports successful")
         
         # Test FastAPI imports
         from fastapi import FastAPI
         from fastapi.middleware.cors import CORSMiddleware
-        print("[SUCCESS] FastAPI imports successful")
+        print("✅ FastAPI imports successful")
         
         # Test LangChain imports
         from langchain_core.runnables import RunnablePassthrough
         from langchain_core.output_parsers import StrOutputParser
         from langchain_core.prompts import ChatPromptTemplate
-        print("[SUCCESS] LangChain core imports successful")
+        print("✅ LangChain core imports successful")
         
         # Test LangChain OpenAI (without initialization)
         from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-        print("[SUCCESS] LangChain OpenAI imports successful")
+        print("✅ LangChain OpenAI imports successful")
         
         # Test LangChain Community
         from langchain_community.vectorstores import Chroma
         from langchain_text_splitters import RecursiveCharacterTextSplitter
-        print("[SUCCESS] LangChain Community imports successful")
+        print("✅ LangChain Community imports successful")
         
         # Test LangGraph
         from langgraph.graph import StateGraph, END
-        print("[SUCCESS] LangGraph imports successful")
+        print("✅ LangGraph imports successful")
         
         # Test LangSmith
         from langsmith import Client
-        print("[SUCCESS] LangSmith imports successful")
+        print("✅ LangSmith imports successful")
         
         return True
         
     except ImportError as e:
-        print(f"[ERROR] Import error: {e}")
+        print(f"❌ Import error: {e}")
         return False
 
 def test_config_class():
@@ -66,18 +66,18 @@ def test_config_class():
         
         # Create an instance
         config = LangChainConfig()
-        print("[SUCCESS] LangChainConfig class instantiated successfully")
+        print("✅ LangChainConfig class instantiated successfully")
         
         # Test basic attributes
         if hasattr(config, 'OPENAI_MODEL'):
-            print("[SUCCESS] OPENAI_MODEL attribute exists")
+            print("✅ OPENAI_MODEL attribute exists")
         if hasattr(config, 'EMBEDDING_MODEL'):
-            print("[SUCCESS] EMBEDDING_MODEL attribute exists")
+            print("✅ EMBEDDING_MODEL attribute exists")
             
         return True
         
     except Exception as e:
-        print(f"[ERROR] Config class error: {e}")
+        print(f"❌ Config class error: {e}")
         # If it's a ChromaDB error, we'll skip this test
         if "chromadb" in str(e).lower():
             print("⚠️  Skipping due to ChromaDB dependency issue")
@@ -102,9 +102,9 @@ def test_file_structure():
     missing_files = []
     for file in required_files:
         if os.path.exists(file):
-            print(f"[SUCCESS] {file} exists")
+            print(f"✅ {file} exists")
         else:
-            print(f"[ERROR] {file} missing")
+            print(f"❌ {file} missing")
             missing_files.append(file)
     
     return len(missing_files) == 0
@@ -119,25 +119,25 @@ def test_docker_config():
             with open('Dockerfile', 'r') as f:
                 content = f.read()
                 if 'FROM python' in content and 'COPY requirements.txt' in content:
-                    print("[SUCCESS] Dockerfile has basic structure")
+                    print("✅ Dockerfile has basic structure")
                 else:
-                    print("[ERROR] Dockerfile missing basic structure")
+                    print("❌ Dockerfile missing basic structure")
                     return False
         else:
-            print("[ERROR] Dockerfile missing")
+            print("❌ Dockerfile missing")
             return False
         
         # Check docker-compose.yml exists
         if os.path.exists('docker-compose.yml'):
-            print("[SUCCESS] docker-compose.yml exists")
+            print("✅ docker-compose.yml exists")
         else:
-            print("[ERROR] docker-compose.yml missing")
+            print("❌ docker-compose.yml missing")
             return False
             
         return True
         
     except Exception as e:
-        print(f"[ERROR] Docker config error: {e}")
+        print(f"❌ Docker config error: {e}")
         return False
 
 def main():
@@ -168,7 +168,7 @@ def main():
         print("🎉 All tests passed! Basic functionality is working.")
         return True
     else:
-        print("[ERROR] Some tests failed. Check the errors above.")
+        print("❌ Some tests failed. Check the errors above.")
         return False
 
 if __name__ == "__main__":

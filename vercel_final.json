@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "session04_simple.py",
+      "src": "session03_final.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "session04_simple.py"
+      "dest": "session03_final.py"
     }
   ]
 }
