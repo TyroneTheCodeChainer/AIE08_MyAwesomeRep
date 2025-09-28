@@ -1,0 +1,2 @@
+Deployment trigger file - updated at 2025-09-26T09:15:00Z
+This file forces Vercel to detect changes and redeploy

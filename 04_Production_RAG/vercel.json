@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "production_rag_system.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "production_rag_system.py"
+    }
+  ],
+  "env": {
+    "OPENAI_API_KEY": "@openai_api_key",
+    "LANGSMITH_API_KEY": "@langsmith_api_key"
+  },
+  "functions": {
+    "production_rag_system.py": {
+      "maxDuration": 30
+    }
+  }
+}
+
