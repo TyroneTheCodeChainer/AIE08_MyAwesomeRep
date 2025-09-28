@@ -1,0 +1,31 @@
+# Session 04: Production RAG System Requirements
+# Building on Sessions 1-3 with LangChain integration
+
+# Core FastAPI (same as root API)
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# LangChain Ecosystem (with fallback support)
+langchain==0.1.0
+langchain-openai==0.0.5
+chromadb==0.4.18
+
+# OpenAI Integration (consistent with previous sessions)
+openai==1.50.0
+
+# Vector operations (same as Session 2/3)
+scikit-learn==1.3.0
+numpy==1.24.3
+
+# Document Processing
+PyPDF2==3.0.1
+
+# Environment Management
+python-dotenv==1.0.0
+
+# HTTP Requests
+requests==2.31.0
+
+# Development and Testing
+pytest==7.4.3

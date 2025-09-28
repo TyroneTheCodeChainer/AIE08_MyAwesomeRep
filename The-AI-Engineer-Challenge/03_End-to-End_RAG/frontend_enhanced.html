@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<!--
+Session 03: Enhanced RAG Frontend with Comprehensive Comments
+============================================================
+
+This is the user interface for our RAG (Retrieval Augmented Generation) system.
+It's like a beautiful, easy-to-use website that lets people:
+1. Upload PDF documents by dragging and dropping them
+2. Ask questions about those documents
+3. Get AI-powered answers based on the document content
+
+WHAT THIS FILE DOES:
+- Creates a beautiful, modern web interface
+- Handles file uploads (drag & drop + click to select)
+- Manages chat between user and AI
+- Connects to our backend server to process everything
+- Shows real-time status updates and error messages
+
+HOW IT WORKS:
+1. User opens this file in a web browser
+2. User uploads a PDF document
+3. User asks questions about the document
+4. The frontend sends the question to our backend
+5. Backend processes the question and returns an answer
+6. Frontend displays the answer to the user
+
+TECHNICAL STUFF:
+- This is pure HTML, CSS, and JavaScript (no frameworks needed)
+- Uses modern web APIs for file handling
+- Makes HTTP requests to our Flask backend
+- Responsive design that works on desktop and mobile
+-->
+
+<html lang="en">
+<head>
+    <!-- Basic HTML setup - tells the browser how to interpret this page -->
+    <meta charset="UTF-8">
+    <!-- This tells the browser to use UTF-8 encoding (supports all characters) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- This makes the page responsive - it adapts to different screen sizes -->
+    <title>Session 03: RAG System - Upload PDFs and Chat with AI</title>
+    
+    <!-- 
+    CSS STYLES - This is where we make the page look beautiful
+    CSS is like the "makeup" for HTML - it controls colors, fonts, spacing, etc.
+    -->
+    <style>
+        /* 
+        RESET STYLES - Start with a clean slate
+        These rules remove default browser styling so we can control everything
+        */
+        * {
+            margin: 0;          /* Remove default spacing around elements */
+            padding: 0;         /* Remove default internal spacing */
+            box-sizing: border-box;  /* Include borders in element width calculations */
+        }
+        
+        /* 
+        BODY STYLING - The main background and font for the entire page
+        */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Use modern, readable fonts that look good on all devices */
+            
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* Create a beautiful gradient background from blue to purple */
+            
+            min-height: 100vh;  /* Make sure the background covers the full screen height */
+            padding: 20px;       /* Add some space around the edges */
+        }
+        
+        /* 
+        MAIN CONTAINER - The white box that holds all our content
+        */
+        .container {
+            max-width: 1200px;  /* Don't let it get too wide on large screens */
+            margin: 0 auto;     /* Center the container on the page */
+            background: white;  /* White background for the content area */
+            border-radius: 15px; /* Rounded corners for a modern look */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); /* Add a subtle shadow */
+            overflow: hidden;   /* Hide anything that goes outside the rounded corners */
+        }
+        
+        /* 
+        HEADER SECTION - The top part with the title and description
+        */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* Same gradient as the body background */
+            color: white;       /* White text on the colored background */
+            padding: 30px;      /* Space inside the header */
+            text-align: center; /* Center all text in the header */
+        }
+        
+        .header h1 {
+            font-size: 2.5em;   /* Large, prominent title */
+            margin-bottom: 10px; /* Space below the title */
+        }
+        
+        .header p {
+            font-size: 1.2em;   /* Slightly larger than normal text */
+            opacity: 0.9;       /* Slightly transparent for a softer look */
+        }
+        
+        /* 
+        MAIN CONTENT AREA - The two-column layout for upload and chat
+        */
+        .main-content {
+            display: grid;                    /* Use CSS Grid for layout */
+            grid-template-columns: 1fr 1fr;  /* Two equal columns */
+            gap: 30px;                       /* Space between the columns */
+            padding: 30px;                   /* Space around the content */
+        }
+        
+        /* 
+        INDIVIDUAL SECTIONS - Each box (upload area, chat area)
+        */
+        .section {
+            background: #f8f9fa;    /* Light gray background */
+            border-radius: 10px;    /* Rounded corners */
+            padding: 25px;          /* Space inside each section */
+            border: 2px solid #e9ecef; /* Light border around each section */
+        }
+        
+        .section h2 {
+            color: #495057;        /* Dark gray text for headings */
+            margin-bottom: 20px;   /* Space below the heading */
+            font-size: 1.5em;      /* Large heading text */
+            border-bottom: 2px solid #667eea; /* Blue line under the heading */
+            padding-bottom: 10px;  /* Space between text and line */
+        }
+        
+        /* 
+        FILE UPLOAD AREA - The drag & drop zone for PDF files
+        */
+        .upload-area {
+            border: 2px dashed #667eea;  /* Dashed blue border */
+            border-radius: 10px;         /* Rounded corners */
+            padding: 30px;               /* Space inside the upload area */
+            text-align: center;          /* Center all text */
+            margin-bottom: 20px;         /* Space below the upload area */
+            transition: all 0.3s ease;   /* Smooth animations when hovering */
+        }
+        
+        /* When user hovers over the upload area */
+        .upload-area:hover {
+            border-color: #764ba2;       /* Change border color to purple */
+            background: #f8f9ff;         /* Light blue background */
+        }
+        
+        /* When user is dragging a file over the upload area */
+        .upload-area.dragover {
+            border-color: #28a745;       /* Green border to show it's ready */
+            background: #f0fff4;         /* Light green background */
+        }
+        
+        /* Hide the actual file input (we'll style our own button) */
+        .file-input {
+            display: none;
+        }
+        
+        /* 
+        BUTTONS - Styled buttons for uploading and sending messages
+        */
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* Beautiful gradient background */
+            color: white;               /* White text */
+            border: none;               /* No border */
+            padding: 12px 25px;         /* Space inside the button */
+            border-radius: 25px;        /* Rounded button */
+            cursor: pointer;            /* Show hand cursor when hovering */
+            font-size: 1em;             /* Normal text size */
+            transition: all 0.3s ease;  /* Smooth animations */
+        }
+        
+        /* When user hovers over the upload button */
+        .upload-btn:hover {
+            transform: translateY(-2px); /* Move button up slightly */
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            /* Add a shadow that matches the button color */
+        }
+        
+        /* 
+        CHAT INTERFACE - The area where users type and see messages
+        */
+        .chat-area {
+            display: flex;              /* Use flexbox for layout */
+            flex-direction: column;     /* Stack elements vertically */
+            height: 400px;              /* Fixed height for the chat area */
+        }
+        
+        /* The area where messages are displayed */
+        .messages {
+            flex: 1;                    /* Take up all available space */
+            overflow-y: auto;           /* Allow scrolling if there are many messages */
+            border: 1px solid #dee2e6;  /* Light border around messages */
+            border-radius: 10px;        /* Rounded corners */
+            padding: 15px;              /* Space inside the messages area */
+            margin-bottom: 15px;        /* Space below the messages */
+            background: white;          /* White background for messages */
+        }
+        
+        /* Individual message styling */
+        .message {
+            margin-bottom: 15px;        /* Space between messages */
+            padding: 10px 15px;         /* Space inside each message */
+            border-radius: 15px;        /* Rounded message bubbles */
+            max-width: 80%;             /* Don't let messages get too wide */
+        }
+        
+        /* User messages (what the user typed) */
+        .message.user {
+            background: #667eea;        /* Blue background */
+            color: white;               /* White text */
+            margin-left: auto;          /* Align to the right side */
+        }
+        
+        /* Assistant messages (AI responses) */
+        .message.assistant {
+            background: #e9ecef;        /* Light gray background */
+            color: #495057;             /* Dark gray text */
+        }
+        
+        /* 
+        INPUT AREA - Where users type their questions
+        */
+        .input-group {
+            display: flex;              /* Put input and button side by side */
+            gap: 10px;                  /* Space between input and button */
+        }
+        
+        /* The text input where users type */
+        .message-input {
+            flex: 1;                    /* Take up most of the space */
+            padding: 12px 15px;         /* Space inside the input */
+            border: 2px solid #dee2e6;  /* Light border */
+            border-radius: 25px;        /* Rounded input */
+            font-size: 1em;             /* Normal text size */
+            outline: none;              /* Remove default browser outline */
+            transition: border-color 0.3s ease; /* Smooth border color changes */
+        }
+        
+        /* When user clicks in the input field */
+        .message-input:focus {
+            border-color: #667eea;      /* Change border to blue */
+        }
+        
+        /* Send button */
+        .send-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            /* Green gradient background */
+            color: white;               /* White text */
+            border: none;               /* No border */
+            padding: 12px 20px;         /* Space inside the button */
+            border-radius: 25px;        /* Rounded button */
+            cursor: pointer;            /* Show hand cursor when hovering */
+            font-size: 1em;             /* Normal text size */
+            transition: all 0.3s ease;  /* Smooth animations */
+        }
+        
+        /* When user hovers over the send button */
+        .send-btn:hover {
+            transform: translateY(-2px); /* Move button up slightly */
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+            /* Add a green shadow */
+        }
+        
+        /* 
+        STATUS MESSAGES - Success, error, and info messages
+        */
+        .status {
+            padding: 10px 15px;         /* Space inside status messages */
+            border-radius: 5px;         /* Rounded corners */
+            margin-bottom: 15px;        /* Space below status messages */
+            font-weight: 500;           /* Slightly bold text */
+        }
+        
+        /* Success messages (green) */
+        .status.success {
+            background: #d4edda;        /* Light green background */
+            color: #155724;             /* Dark green text */
+            border: 1px solid #c3e6cb;  /* Green border */
+        }
+        
+        /* Error messages (red) */
+        .status.error {
+            background: #f8d7da;        /* Light red background */
+            color: #721c24;             /* Dark red text */
+            border: 1px solid #f5c6cb;  /* Red border */
+        }
+        
+        /* Info messages (blue) */
+        .status.info {
+            background: #d1ecf1;        /* Light blue background */
+            color: #0c5460;             /* Dark blue text */
+            border: 1px solid #bee5eb;  /* Blue border */
+        }
+        
+        /* 
+        MODE TOGGLE - Switch between RAG mode and regular chat
+        */
+        .mode-toggle {
+            display: flex;              /* Put buttons side by side */
+            gap: 10px;                  /* Space between buttons */
+            margin-bottom: 20px;        /* Space below the toggle */
+        }
+        
+        /* Individual mode buttons */
+        .mode-btn {
+            flex: 1;                    /* Each button takes equal space */
+            padding: 10px;              /* Space inside buttons */
+            border: 2px solid #dee2e6;  /* Light border */
+            background: white;          /* White background */
+            border-radius: 5px;         /* Rounded corners */
+            cursor: pointer;            /* Show hand cursor when hovering */
+            transition: all 0.3s ease;  /* Smooth animations */
+        }
+        
+        /* Active mode button (currently selected) */
+        .mode-btn.active {
+            background: #667eea;        /* Blue background */
+            color: white;               /* White text */
+            border-color: #667eea;      /* Blue border */
+        }
+        
+        /* 
+        FILE INFO - Shows details about uploaded files
+        */
+        .file-info {
+            background: #e9ecef;        /* Light gray background */
+            padding: 10px;              /* Space inside the info box */
+            border-radius: 5px;         /* Rounded corners */
+            margin-top: 10px;           /* Space above the info box */
+            font-size: 0.9em;           /* Slightly smaller text */
+        }
+        
+        /* 
+        RESPONSIVE DESIGN - Make it work on mobile devices
+        */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr; /* Single column on mobile */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+    MAIN PAGE STRUCTURE
+    This is the HTML that creates the actual page content
+    -->
+    
+    <!-- Main container that holds everything -->
+    <div class="container">
+        <!-- Header section with title and description -->
+        <div class="header">
+            <h1>🤖 Session 03: RAG System</h1>
+            <p>Upload PDFs and chat with your documents using AI</p>
+        </div>
+        
+        <!-- Main content area with two columns -->
+        <div class="main-content">
+            <!-- 
+            UPLOAD SECTION - Left column for uploading PDF files
+            -->
+            <div class="section">
+                <h2>📄 Upload Document</h2>
+                
+                <!-- Drag and drop area for files -->
+                <div class="upload-area" id="uploadArea">
+                    <p>📁 Drag & drop a PDF file here or click to select</p>
+                    <!-- Hidden file input that actually handles the file selection -->
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf">
+                    <!-- Button that triggers the file input when clicked -->
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                        Choose PDF File
+                    </button>
+                </div>
+                
+                <!-- Area to show information about the selected file -->
+                <div id="fileInfo" class="file-info" style="display: none;">
+                    <strong>Selected:</strong> <span id="fileName"></span><br>
+                    <strong>Size:</strong> <span id="fileSize"></span>
+                </div>
+                
+                <!-- Area to show status messages (success, error, info) -->
+                <div id="uploadStatus"></div>
+            </div>
+            
+            <!-- 
+            CHAT SECTION - Right column for asking questions
+            -->
+            <div class="section">
+                <h2>💬 Chat with Document</h2>
+                
+                <!-- Toggle between RAG mode and regular chat -->
+                <div class="mode-toggle">
+                    <button class="mode-btn active" id="ragModeBtn" onclick="setMode('rag')">
+                        🧠 RAG Mode
+                    </button>
+                    <button class="mode-btn" id="chatModeBtn" onclick="setMode('chat')">
+                        💭 Regular Chat
+                    </button>
+                </div>
+                
+                <!-- Chat interface -->
+                <div class="chat-area">
+                    <!-- Area where messages are displayed -->
+                    <div class="messages" id="messages">
+                        <div class="message assistant">
+                            👋 Hello! Upload a PDF document to start chatting with it, or switch to regular chat mode.
+                        </div>
+                    </div>
+                    
+                    <!-- Input area for typing messages -->
+                    <div class="input-group">
+                        <input type="text" class="message-input" id="messageInput" 
+                               placeholder="Ask a question about your document..." 
+                               onkeypress="handleKeyPress(event)">
+                        <button class="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+    JAVASCRIPT CODE - This makes the page interactive
+    JavaScript is like the "brain" of the webpage - it handles user interactions
+    and communicates with our backend server
+    -->
+    <script>
+        // =============================================================================
+        // CONFIGURATION - Settings for our application
+        // =============================================================================
+        
+        // Backend server URL - this is where our Flask server is running
+        const BACKEND_URL = 'http://localhost:5000';
+        
+        // Current mode - are we in RAG mode (using documents) or regular chat?
+        let currentMode = 'rag';
+        
+        // Currently uploaded file - stores information about the PDF
+        let uploadedFile = null;
+        
+        // =============================================================================
+        // INITIALIZATION - Set up the page when it loads
+        // =============================================================================
+        
+        // When the page finishes loading, run these setup functions
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();    // Set up drag & drop functionality
+            checkBackendHealth(); // Check if our backend server is running
+        });
+        
+        // =============================================================================
+        // FILE UPLOAD FUNCTIONALITY - Handle PDF file uploads
+        // =============================================================================
+        
+        /**
+         * Set up drag and drop file upload
+         * This makes it easy for users to upload files by just dragging them
+         */
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            // When user drags a file over the upload area
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Prevent default browser behavior
+                uploadArea.classList.add('dragover'); // Add visual feedback
+            });
+            
+            // When user stops dragging over the upload area
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover'); // Remove visual feedback
+            });
+            
+            // When user drops a file on the upload area
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault(); // Prevent default browser behavior
+                uploadArea.classList.remove('dragover'); // Remove visual feedback
+                const files = e.dataTransfer.files; // Get the dropped files
+                if (files.length > 0) {
+                    handleFileSelect(files[0]); // Process the first file
+                }
+            });
+            
+            // When user selects a file using the file input
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+        }
+        
+        /**
+         * Handle when a file is selected (either by drag & drop or clicking)
+         * This validates the file and starts the upload process
+         */
+        function handleFileSelect(file) {
+            // Check if it's a PDF file
+            if (!file.name.endsWith('.pdf')) {
+                showStatus('error', 'Please select a PDF file.');
+                return;
+            }
+            
+            // Store the file for later use
+            uploadedFile = file;
+            
+            // Show file information to the user
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+            document.getElementById('fileInfo').style.display = 'block';
+            
+            // Start uploading the file to our backend
+            uploadFile(file);
+        }
+        
+        /**
+         * Upload the selected file to our backend server
+         * This sends the PDF file to our Flask server for processing
+         */
+        async function uploadFile(file) {
+            showStatus('info', 'Uploading PDF...');
+            
+            // Create a FormData object to send the file
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                // Send the file to our backend
+                const response = await fetch(`${BACKEND_URL}/api/upload-pdf`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                // Get the response from the server
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Success! Show success message
+                    showStatus('success', `✅ ${data.message} (${data.chunks_added} chunks added)`);
+                    addMessage('assistant', `📄 Document "${data.filename}" uploaded successfully! You can now ask questions about it.`);
+                } else {
+                    // Error! Show error message
+                    showStatus('error', `❌ ${data.error}`);
+                }
+            } catch (error) {
+                // Network error! Show error message
+                showStatus('error', `❌ Upload failed: ${error.message}`);
+            }
+        }
+        
+        // =============================================================================
+        // CHAT MODE FUNCTIONALITY - Switch between RAG and regular chat
+        // =============================================================================
+        
+        /**
+         * Set the current chat mode (RAG or regular chat)
+         * This changes how the system processes user questions
+         */
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update button styles to show which mode is active
+            document.getElementById('ragModeBtn').classList.toggle('active', mode === 'rag');
+            document.getElementById('chatModeBtn').classList.toggle('active', mode === 'chat');
+            
+            // Update the input placeholder text
+            const input = document.getElementById('messageInput');
+            input.placeholder = mode === 'rag' 
+                ? 'Ask a question about your document...' 
+                : 'Type your message...';
+        }
+        
+        // =============================================================================
+        // MESSAGE HANDLING - Send and receive messages
+        // =============================================================================
+        
+        /**
+         * Send a message to the backend and get a response
+         * This is the main function that handles user questions
+         */
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            // Don't send empty messages
+            if (!message) return;
+            
+            // Add the user's message to the chat display
+            addMessage('user', message);
+            input.value = ''; // Clear the input field
+            
+            // Show a "thinking" indicator while we wait for the response
+            const typingId = addMessage('assistant', '🤔 Thinking...');
+            
+            try {
+                let response;
+                
+                // Choose which endpoint to use based on the current mode
+                if (currentMode === 'rag') {
+                    // RAG mode - use document context
+                    response = await fetch(`${BACKEND_URL}/api/rag-chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_message: message
+                        })
+                    });
+                } else {
+                    // Regular chat mode - no document context
+                    response = await fetch(`${BACKEND_URL}/api/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_message: message
+                        })
+                    });
+                }
+                
+                // Get the response data
+                const data = await response.json();
+                
+                // Remove the "thinking" indicator
+                document.getElementById(typingId).remove();
+                
+                if (response.ok) {
+                    // Success! Show the AI's response
+                    addMessage('assistant', data.response);
+                } else {
+                    // Error! Show the error message
+                    addMessage('assistant', `❌ Error: ${data.error}`);
+                }
+            } catch (error) {
+                // Network error! Remove thinking indicator and show error
+                document.getElementById(typingId).remove();
+                addMessage('assistant', `❌ Connection error: ${error.message}`);
+            }
+        }
+        
+        /**
+         * Handle when user presses Enter key in the input field
+         * This makes it easy to send messages without clicking the button
+         */
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        /**
+         * Add a message to the chat display
+         * This shows messages in the chat area with proper styling
+         */
+        function addMessage(type, content) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = content;
+            
+            // Give each message a unique ID so we can find it later
+            const messageId = 'msg_' + Date.now();
+            messageDiv.id = messageId;
+            
+            // Add the message to the chat area
+            messagesDiv.appendChild(messageDiv);
+            
+            // Scroll to the bottom to show the new message
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // Return the message ID so we can find it later if needed
+            return messageId;
+        }
+        
+        // =============================================================================
+        // STATUS MESSAGES - Show success, error, and info messages
+        // =============================================================================
+        
+        /**
+         * Show a status message to the user
+         * This displays success, error, or info messages in the upload area
+         */
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('uploadStatus');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+        
+        // =============================================================================
+        // BACKEND HEALTH CHECK - Make sure our server is running
+        // =============================================================================
+        
+        /**
+         * Check if our backend server is running and accessible
+         * This helps users understand if there's a connection problem
+         */
+        async function checkBackendHealth() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus('success', '✅ Backend connected successfully');
+                } else {
+                    showStatus('error', '❌ Backend connection failed');
+                }
+            } catch (error) {
+                showStatus('error', '❌ Backend not running. Please start the Flask server.');
+            }
+        }
+    </script>
+</body>
+</html>
+
