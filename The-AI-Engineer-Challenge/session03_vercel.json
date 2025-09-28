@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "03_End-to-End_RAG/session03_with_aimakerspace.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "03_End-to-End_RAG/session03_with_aimakerspace.py"
+    }
+  ],
+  "env": {
+    "OPENAI_API_KEY": "@openai-api-key"
+  }
+}
