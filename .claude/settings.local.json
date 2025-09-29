@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(curl -s \"http://localhost:8001/\")",
+      "Bash(curl:*)",
+      "Bash(ollama:*)",
+      "Bash(pip install:*)",
+      "Read(//c/Users/tfel4/OneDrive/Documents/2025/AI_BootCamp/AIM_CodeRep/code/**)",
+      "Bash(export:*)",
+      "Bash(python:*)",
+      "Bash(uv add:*)",
+      "Bash(uv sync:*)",
+      "Bash(UV_LINK_MODE=copy uv sync)",
+      "Bash(uv venv:*)",
+      "Bash(source:*)",
+      "Read(//c/Users/tfel4/OneDrive/Documents/2025/AI_BootCamp/AIM_CodeRep/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
