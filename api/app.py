@@ -47,6 +47,7 @@ DAD_JOKES = [
     "What do you call a fake noodle? An impasta!",
     "Why did the coffee file a police report? It got mugged!",
     "What do you call a sleeping bull? A bulldozer!",
+    "What kind of cheese do you use to hide a horse? Mascarpone!",
 ]
 
 # Collection of programming dad jokes
