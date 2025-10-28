@@ -121,6 +121,10 @@ coverage/
 .cursorignore
 .cursorindexingignore
 
+# Private documentation
+*Loom_Script.md
+*_Loom_Script.md
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
