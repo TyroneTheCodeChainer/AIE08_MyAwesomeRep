@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from openai import OpenAI
 import os
 from typing import Optional
+import random
 
 # Initialize FastAPI application with a title
 app = FastAPI(
@@ -33,6 +34,48 @@ class ChatRequest(BaseModel):
     user_message: str      # Message from the user
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
     api_key: str          # OpenAI API key for authentication
+
+# Collection of dad jokes
+DAD_JOKES = [
+    "Why don't scientists trust atoms? Because they make up everything!",
+    "I told my wife she was drawing her eyebrows too high. She looked surprised.",
+    "Why don't eggs tell jokes? They'd crack each other up!",
+    "I don't trust stairs. They're always up to something.",
+    "Why don't programmers like nature? It has too many bugs.",
+    "What do you call a bear with no teeth? A gummy bear!",
+    "Why did the scarecrow win an award? He was outstanding in his field!",
+    "What do you call a fake noodle? An impasta!",
+    "Why did the coffee file a police report? It got mugged!",
+    "What do you call a sleeping bull? A bulldozer!",
+]
+
+# Collection of programming dad jokes
+PROGRAMMING_DAD_JOKES = [
+    "How do you comfort a JavaScript bug? You console it!",
+    "Why do programmers prefer dark mode? Because light attracts bugs!",
+    "A SQL query walks into a bar, walks up to two tables and asks: 'Can I join you?'",
+    "Why do programmers always mix up Halloween and Christmas? Because Oct 31 == Dec 25!",
+    "Why don't programmers like to go outside? The sun gives them syntax errors!",
+    "How many programmers does it take to change a light bulb? None, that's a hardware problem!",
+    "Why did the programmer quit his job? He didn't get arrays!",
+    "I'm not arguing, I'm just explaining why I'm right in a loop.",
+    "Why do programmers hate nature? It has bugs.",
+    "There are only 10 types of people in the world: those who understand binary and those who don't.",
+]
+
+# Collection of programming quotes
+PROGRAMMING_QUOTES = [
+    "Any fool can write code that a computer can understand. Good programmers write code that humans can understand. - Martin Fowler",
+    "The best code is no code at all. And the second best code is self-documenting code. - Jeff Atwood",
+    "First, solve the problem. Then, write the code. - John Johnson",
+    "Simplicity is the ultimate sophistication. - Leonardo da Vinci",
+    "Code is like humor. When you have to explain it, it's bad. - Cory House",
+    "Programming isn't about what you know; it's about what you can figure out. - Chris Pine",
+    "The only way to learn a new programming language is by writing programs in it. - Dennis Ritchie",
+    "Before software can be reusable it first has to be usable. - Ralph Johnson",
+    "It's not a bug – it's an undocumented feature. - Anonymous",
+    "Always code as if the person who ends up maintaining your code is a violent psychopath who knows where you live. - Martin Golding",
+]
 
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
@@ -75,7 +118,10 @@ async def root():
         "endpoints": {
             "health": "/api/health",
             "chat": "/api/chat",
-            "sessions": "/api/sessions"
+            "sessions": "/api/sessions",
+            "joke": "/api/joke",
+            "programming_joke": "/api/joke/programming",
+            "programming_quote": "/api/quote/programming"
         }
     }
 
@@ -112,6 +158,39 @@ async def sessions():
             "features": ["OpenAI Chat", "Streaming responses", "CORS enabled"],
             "status": "active"
         }
+    }
+
+# Define the dad joke endpoint
+@app.get("/api/joke")
+async def get_dad_joke():
+    """
+    Get a random dad joke.
+    """
+    return {
+        "joke": random.choice(DAD_JOKES),
+        "type": "dad joke"
+    }
+
+# Define the programming dad joke endpoint
+@app.get("/api/joke/programming")
+async def get_programming_dad_joke():
+    """
+    Get a random programming-related dad joke.
+    """
+    return {
+        "joke": random.choice(PROGRAMMING_DAD_JOKES),
+        "type": "programming dad joke"
+    }
+
+# Define the programming quote endpoint
+@app.get("/api/quote/programming")
+async def get_programming_quote():
+    """
+    Get a random programming quote.
+    """
+    return {
+        "quote": random.choice(PROGRAMMING_QUOTES),
+        "type": "programming quote"
     }
 
 # Entry point for running the application directly

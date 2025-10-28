@@ -7,6 +7,11 @@ This document provides comprehensive instructions for merging assignment branche
 
 ## 📋 **Available Assignment Branches**
 
+### **Dad Joke and Programming Quote Feature**
+- **Branch**: `feature/dad-joke-and-quote-endpoints`
+- **Status**: ✅ Complete
+- **Content**: Added three new API endpoints for dad jokes and programming quotes
+
 ### **Session 01: Prototyping Best Practices & Vibe Check**
 - **Branch**: `s01-assignment`
 - **Status**: ✅ Complete
@@ -140,6 +145,37 @@ This document provides comprehensive instructions for merging assignment branche
   - ✅ Production features implemented
   ```
 
+#### **Dad Joke and Programming Quote Feature PR:**
+- **Base branch**: `main`
+- **Compare branch**: `feature/dad-joke-and-quote-endpoints`
+- **Title**: `Add Dad Joke and Programming Quote Endpoints`
+- **Description**: 
+  ```
+  ## Dad Joke and Programming Quote Feature
+  
+  ### Changes:
+  - Added GET /api/joke endpoint for random dad jokes
+  - Added GET /api/joke/programming endpoint for programming dad jokes
+  - Added GET /api/quote/programming endpoint for programming quotes
+  - Collection of 10 dad jokes, 10 programming dad jokes, and 10 programming quotes
+  - Updated root endpoint documentation
+  - No external API dependencies required
+  
+  ### Files Modified:
+  - `api/app.py` (added three new endpoints and data collections)
+  
+  ### Endpoints Added:
+  - GET /api/joke - Returns a random dad joke
+  - GET /api/joke/programming - Returns a programming-related dad joke
+  - GET /api/quote/programming - Returns an inspirational programming quote
+  
+  ### Testing:
+  - ✅ All three endpoints functional
+  - ✅ Random selection working correctly
+  - ✅ Response format consistent
+  - ✅ CORS enabled for frontend integration
+  ```
+
 ### **Step 3: Review and Merge**
 1. Review each pull request carefully
 2. Check that all files are included
@@ -269,6 +305,38 @@ gh pr create \
   --head s04-assignment
 ```
 
+#### **Dad Joke and Programming Quote Feature:**
+```bash
+# Create PR for Dad Joke and Programming Quote Feature
+gh pr create \
+  --title "Add Dad Joke and Programming Quote Endpoints" \
+  --body "## Dad Joke and Programming Quote Feature
+
+### Changes:
+- Added GET /api/joke endpoint for random dad jokes
+- Added GET /api/joke/programming endpoint for programming dad jokes
+- Added GET /api/quote/programming endpoint for programming quotes
+- Collection of 10 dad jokes, 10 programming dad jokes, and 10 programming quotes
+- Updated root endpoint documentation
+- No external API dependencies required
+
+### Files Modified:
+- \`api/app.py\` (added three new endpoints and data collections)
+
+### Endpoints Added:
+- GET /api/joke - Returns a random dad joke
+- GET /api/joke/programming - Returns a programming-related dad joke
+- GET /api/quote/programming - Returns an inspirational programming quote
+
+### Testing:
+- ✅ All three endpoints functional
+- ✅ Random selection working correctly
+- ✅ Response format consistent
+- ✅ CORS enabled for frontend integration" \
+  --base main \
+  --head feature/dad-joke-and-quote-endpoints
+```
+
 ### **Step 2: Merge Pull Requests via CLI**
 
 #### **Merge Session 01:**
@@ -293,6 +361,12 @@ gh pr merge s03-assignment --merge --delete-branch
 ```bash
 # Merge Session 04 PR
 gh pr merge s04-assignment --merge --delete-branch
+```
+
+#### **Merge Dad Joke and Programming Quote Feature:**
+```bash
+# Merge Dad Joke and Programming Quote Feature PR
+gh pr merge feature/dad-joke-and-quote-endpoints --merge --delete-branch
 ```
 
 ---
