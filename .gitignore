@@ -121,11 +121,23 @@ coverage/
 .cursorignore
 .cursorindexingignore
 
-# Private documentation
-*Loom_Script.md
-*_Loom_Script.md
+# Private documentation and video scripts
+*Loom_Script*.md
+*_Loom_Script*.md
+Loom_Script*.md
+loom_script*.md
+Session*_Loom_Script*.md
+Session*_Video_Script*.md
+*_Video_Script.md
+*Video_Script.md
 
 # Marimo
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Private documentation
+*_PRIVATE.md
+*_private.md
+BRUTAL_TRUTH*.md
+COMPLIANCE*.md
